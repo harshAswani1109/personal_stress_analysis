@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useRouter } from "next/router";
-import { Landing } from "@/components/Common/landing";
 
 export const Landing = () => {
   const router = useRouter();
