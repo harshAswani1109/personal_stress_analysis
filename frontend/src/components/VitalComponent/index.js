@@ -44,7 +44,6 @@ export default function VitalsForm() {
       if (resultData.status === "success") {
         setResult("Prediction: " + resultData.health_status);
         setShowDassButton(true);
-        // Redirect to /dass
         window.location.href = "/dass";
       } else {
         setResult("Error: " + resultData.message);
@@ -63,7 +62,7 @@ export default function VitalsForm() {
   };
 
   return (
-    <div className="bg-gray-100 flex flex-col justify-center gap-14 min-h-screen">
+    <div className="pt-20 bg-gray-100 flex flex-col justify-center gap-14 min-h-screen">
       <div>
         <h1 className="text-4xl text-blue-500 font-bold text-center">
           Vitals Page

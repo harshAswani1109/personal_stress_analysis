@@ -9,14 +9,13 @@ import {
 
 export default function DassForm() {
   const [vitalsData, setVitalsData] = useState(null);
-  const [responses, setResponses] = useState(Array(3).fill("")); // Track responses
+  const [responses, setResponses] = useState(Array(3).fill(""));
   const router = useRouter();
 
   useEffect(() => {
     const vitals = JSON.parse(localStorage.getItem("vitalsData"));
     if (!vitals) {
       alert("No vitals data found. Please enter your vitals first.");
-      router.push("/vital"); // Redirect to the homepage if no vitals are found
     } else {
       setVitalsData(vitals);
     }
@@ -24,7 +23,7 @@ export default function DassForm() {
 
   const handleSelectChange = (index, value) => {
     const newResponses = [...responses];
-    newResponses[index] = value; // Update the response for the specific question
+    newResponses[index] = value;
     setResponses(newResponses);
   };
 
@@ -48,7 +47,6 @@ export default function DassForm() {
     if (isIncomplete) {
       alert("Please complete all questions before submitting.");
     } else {
-      // Send results to the result page
       router.push({
         pathname: "/result",
         query: {
@@ -61,7 +59,7 @@ export default function DassForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="pt-20 pb-8 min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
         <h1 className="text-4xl font-bold text-center text-blue-600 mb-8">
           DASS-42 Questionnaire

@@ -5,8 +5,7 @@ export default function ChatM() {
   const [inputValue, setInputValue] = useState("");
   const [response, setResponse] = useState("");
   const [messages, setMessages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // Track loading state
-
+  const [isLoading, setIsLoading] = useState(false); 
   useEffect(() => {
     const storedPrescription = localStorage.getItem("prescription");
     if (storedPrescription) {
@@ -20,7 +19,7 @@ export default function ChatM() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Set loading state to true
+    setIsLoading(true);
     const timestamp = new Date().toLocaleTimeString();
     try {
       const res = await fetch("/api/msg", {
@@ -40,7 +39,7 @@ export default function ChatM() {
     } catch (error) {
       setResponse("Try again, unable to understand the query.");
     } finally {
-      setIsLoading(false); // Reset loading state
+      setIsLoading(false); 
       setInputValue("");
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -50,30 +49,24 @@ export default function ChatM() {
     }
   };
 
-  const messagesEndRef = useRef(null); // Create a ref for the messages end
+  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); // Scroll to the bottom
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); 
   };
 
   useEffect(() => {
-    scrollToBottom(); // Scroll to bottom whenever messages change
+    scrollToBottom();
   }, [messages]);
 
   return (
     <div className="flex-1 justify-between flex flex-col w-full">
-      <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200 w-full fixed top-0 backdrop-blur-xl">
-        <div className="text-2xl mt-1 flex items-center justify-center w-full">
-          <span className="text-gray-700 mr-3">Personal Stress Analysis</span>
-        </div>
-      </div>
-
       <div
         id="messages"
         className="flex flex-col space-y-4 p-3 w-full pt-20 pb-24"
       >
         {prescription && (
-          <div className="bg-gray-300 text-gray-600 px-4 py-2 rounded-lg w-1/2 inline-block">
+          <div className="cursor-pointer bg-gray-300 text-gray-600 px-4 py-2 rounded-lg w-1/2 inline-block">
             {prescription}
           </div>
         )}
@@ -89,7 +82,7 @@ export default function ChatM() {
             <div key={index} className={`chat-message w-full ${messageClass}`}>
               <div className="flex items-end w-full">
                 <div className={`flex flex-col space-y-2 w-full mx-2 order-2 items-${messageAlignment}`}>
-                  <div className={`w-1/2 flex justify-${messageAlignment}`}>
+                  <div className={`w-1/2 cursor-pointer flex justify-${messageAlignment}`}>
                     <span className={`px-3 py-3 rounded-lg inline-block ${messageBubbleClass}`}>
                       {msg.text}
                     </span>
@@ -99,7 +92,7 @@ export default function ChatM() {
             </div>
           );
         })}
-        <div ref={messagesEndRef} /> {/* Reference for scrolling */}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="border-t-2 border-gray-200 px-4 p-4 mb-2 sm:mb-0 bottom-0 fixed w-full backdrop-blur-xl">
