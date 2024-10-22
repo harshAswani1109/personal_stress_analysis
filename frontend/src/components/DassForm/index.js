@@ -76,7 +76,7 @@ export default function DassForm() {
               Temperature: {vitalsData.temp}°C
             </p>
             <p className="text-lg text-gray-800 font-semibold">
-              Pulse Rate: {vitalsData.pulse} BPM
+              Pulse Rate: {vitalsData.hr} BPM
             </p>
           </div>
         )}
