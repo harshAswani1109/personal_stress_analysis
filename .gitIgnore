@@ -80,3 +80,5 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+
+mental_health/

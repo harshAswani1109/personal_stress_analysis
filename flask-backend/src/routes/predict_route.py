@@ -1,17 +1,18 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-import joblib
+from flask import Blueprint, request, jsonify
+import os
+import sys
+import logging
 import numpy as np
+import joblib
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-app = Flask(__name__)
-CORS(app)  
-
+predict_bp = Blueprint('predict_route', __name__)
 
 model = joblib.load('voting_classification_model.pkl')
 
-
-@app.route('/predict', methods=['POST'])
+@predict_bp.route('/predict', methods=['POST'])
 def predict():
     try:
         data = request.json
@@ -33,6 +34,3 @@ def predict():
         return jsonify({'status': 'success', 'health_status': health_status})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)})
-
-if __name__ == '__main__':
-    app.run(debug=True)
