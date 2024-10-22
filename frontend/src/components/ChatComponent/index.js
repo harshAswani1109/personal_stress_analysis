@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 export default function ChatM() {
   const [prescription, setPrescription] = useState("hello");
@@ -50,6 +50,16 @@ export default function ChatM() {
     }
   };
 
+  const messagesEndRef = useRef(null); // Create a ref for the messages end
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); // Scroll to the bottom
+  };
+
+  useEffect(() => {
+    scrollToBottom(); // Scroll to bottom whenever messages change
+  }, [messages]);
+
   return (
     <div className="flex-1 justify-between flex flex-col w-full">
       <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200 w-full fixed top-0 backdrop-blur-xl">
@@ -60,7 +70,6 @@ export default function ChatM() {
 
       <div
         id="messages"
-        // className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
         className="flex flex-col space-y-4 p-3 w-full pt-20 pb-24"
       >
         {prescription && (
@@ -68,38 +77,29 @@ export default function ChatM() {
             {prescription}
           </div>
         )}
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`chat-message w-full ${
-              msg.sender === "You" ? "justify-end" : ""
-            }`}
-          >
-            <div className="flex items-end w-full">
-              <div
-                className={`flex flex-col space-y-2 w-full mx-2 order-2 items-${
-                  msg.sender === "You" ? "end" : "start"
-                }`}
-              >
-                <div
-                  className={`w-1/2 flex justify-${
-                    msg.sender === "You" ? "end" : "start"
-                  }`}
-                >
-                  <span
-                    className={`px-3 py-3  rounded-lg inline-block ${
-                      msg.sender === "You"
-                        ? "rounded-br-none bg-blue-600 text-white"
-                        : "bg-gray-300 text-gray-600"
-                    }`}
-                  >
-                    {msg.text}
-                  </span>
+        {messages.map((msg, index) => {
+          const isUser = msg.sender === "You";
+          const messageClass = isUser ? "justify-end" : "";
+          const messageBubbleClass = isUser
+            ? "rounded-br-none bg-blue-600 text-white"
+            : "bg-gray-300 text-gray-600";
+          const messageAlignment = isUser ? "end" : "start";
+
+          return (
+            <div key={index} className={`chat-message w-full ${messageClass}`}>
+              <div className="flex items-end w-full">
+                <div className={`flex flex-col space-y-2 w-full mx-2 order-2 items-${messageAlignment}`}>
+                  <div className={`w-1/2 flex justify-${messageAlignment}`}>
+                    <span className={`px-3 py-3 rounded-lg inline-block ${messageBubbleClass}`}>
+                      {msg.text}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
+        <div ref={messagesEndRef} /> {/* Reference for scrolling */}
       </div>
 
       <div className="border-t-2 border-gray-200 px-4 p-4 mb-2 sm:mb-0 bottom-0 fixed w-full backdrop-blur-xl">
