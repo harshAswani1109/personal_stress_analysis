@@ -1,3 +1,4 @@
+import { API_URL } from "@/constants";
 import { useState } from "react";
 
 export default function VitalsPage() {
@@ -13,7 +14,6 @@ export default function VitalsPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Check if all fields are filled
     if (
       !vitalsData.hr ||
       !vitalsData.resp ||
@@ -25,11 +25,9 @@ export default function VitalsPage() {
     }
 
     try {
-      // Save the vitals data to localStorage
       localStorage.setItem("vitalsData", JSON.stringify(vitalsData));
 
-      // Make the API request to the Flask backend
-      const response = await fetch("http://127.0.0.1:5000/predict", {
+      const response = await fetch(`${API_URL}/predict`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,6 +44,8 @@ export default function VitalsPage() {
       if (resultData.status === "success") {
         setResult("Prediction: " + resultData.health_status);
         setShowDassButton(true);
+        // Redirect to /dass
+        window.location.href = "/dass";
       } else {
         setResult("Error: " + resultData.message);
       }

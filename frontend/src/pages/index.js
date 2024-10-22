@@ -2,6 +2,7 @@ import Image from "next/image";
 import localFont from "next/font/local";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -15,6 +16,7 @@ const geistMono = localFont({
 });
 
 export default function Home() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +27,7 @@ export default function Home() {
       localStorage.setItem("username", username);
       localStorage.setItem("password", password);
       alert("Login successful!");
+      router.push("/vital");
     } else {
       alert("Invalid credentials!");
     }
@@ -75,7 +78,6 @@ export default function Home() {
               <button type="submit" className="w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
                 Login
               </button>
-            
             </form>
           </div>
         </div>
