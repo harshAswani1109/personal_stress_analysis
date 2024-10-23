@@ -55,10 +55,14 @@ export default function VitalsForm() {
   };
 
   const handleChange = (e) => {
-    setVitalsData({
-      ...vitalsData,
-      [e.target.name]: e.target.value,
-    });
+    const value = e.target.value;
+    // Check if the value is a positive number
+    if (value === "" || Number(value) >= 0) {
+      setVitalsData({
+        ...vitalsData,
+        [e.target.name]: value,
+      });
+    }
   };
 
   return (

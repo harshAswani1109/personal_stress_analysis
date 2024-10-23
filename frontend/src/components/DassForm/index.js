@@ -9,7 +9,7 @@ import {
 
 export default function DassForm() {
   const [vitalsData, setVitalsData] = useState(null);
-  const [responses, setResponses] = useState(Array(3).fill(""));
+  const [responses, setResponses] = useState(Array(42).fill(""));
   const router = useRouter();
 
   useEffect(() => {
