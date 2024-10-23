@@ -65,11 +65,11 @@ export default function ChatM() {
         id="messages"
         className="flex flex-col space-y-4 p-3 w-full pt-20 pb-24"
       >
-        {prescription && (
+        {/* {prescription && (
           <div className="cursor-pointer bg-gray-300 text-gray-600 px-4 py-2 rounded-lg w-1/2 inline-block">
             {prescription}
           </div>
-        )}
+        )} */}
         {messages.map((msg, index) => {
           const isUser = msg.sender === "You";
           const messageClass = isUser ? "justify-end" : "";

@@ -1,8 +1,39 @@
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import React from 'react';
+
+// Define button configurations
+const buttonConfigs = [
+  {
+    message: "Chat with Us",
+    color: "bg-blue-500",
+    route: "/chat",
+  },
+  {
+    message: "Expert Consultant",
+    color: "bg-red-500",
+    route: "/expert-chat",
+  },
+];
 
 export default function ResultTable() {
   const router = useRouter();
   const { stressScore, anxietyScore, depressionScore } = router.query;
+  const [vitalLevel, setVitalLevel] = useState(null);
+
+  useEffect(() => {
+    try {
+      const storedVitalLevel = localStorage.getItem("vitalLevel");
+      if (storedVitalLevel && (storedVitalLevel === "abnormal" || storedVitalLevel === "normal")) {
+        setVitalLevel(storedVitalLevel);
+      } else {
+        setVitalLevel(null);
+      }
+    } catch (error) {
+      console.error("Error retrieving vitalLevel from localStorage:", error);
+      setVitalLevel(null);
+    }
+  }, []);
 
   const getStressLevel = (score) => {
     if (score <= 14) return "Normal";
@@ -28,16 +59,24 @@ export default function ResultTable() {
     return "Extremely Severe";
   };
 
+  const isAbnormal = (level) => level === "abnormal";
+
+  const msg1 = "You can reach out for support.";
+  const msg2 = `Please consult a professional immediately. Due to ${depressionScore > 13 ? 'Depression' : ''} ${anxietyScore > 14 ? 'Anxiety' : ''} ${stressScore > 25 ? 'Stress' : ''}`.trim();
+
+  const needsConsultation = isAbnormal(vitalLevel) && 
+    (depressionScore > 13 || anxietyScore > 14 || stressScore > 25);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
         <h1 className="text-4xl font-bold text-center text-blue-600 mb-8">
-          Your DASS-42 Results
+          Final Report
         </h1>
 
-        <table className="w-full border-collapse">
+        <table className="w-full border-collapse mb-6">
           <thead>
-            <tr>
+            <tr className="bg-gray-200">
               <th className="border px-4 py-2">Category</th>
               <th className="border px-4 py-2">Score</th>
               <th className="border px-4 py-2">Level</th>
@@ -67,7 +106,46 @@ export default function ResultTable() {
             </tr>
           </tbody>
         </table>
+        {vitalLevel && (
+        <div className="mt-4 text-center cursor-pointer">
+          <table className="w-full border-collapse">
+            <tbody>
+              <tr>
+                <td className="border px-4 py-2">
+                  <p className={`font-semibold text-lg ${needsConsultation ? 'text-red-600' : 'text-green-600'}`}>
+                    {needsConsultation ? msg2 : msg1}
+                  </p>
+                </td>
+                <td className="border px-4 py-2">
+                  {needsConsultation ? (
+                    <button
+                      onClick={() => router.push(buttonConfigs[1].route)}
+                      className={`${buttonConfigs[1].color} text-white px-6 py-3 rounded-lg shadow-md hover:${buttonConfigs[0].color.replace('500', '600')} transition duration-200`}
+                    >
+                      {buttonConfigs[1].message}
+                    </button>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-4">
+                      {buttonConfigs.map((button, index) => (
+                        <button
+                          key={index}
+                          onClick={() => router.push(button.route)}
+                          className={`${button.color} text-white px-6 py-3 rounded-lg shadow-md hover:${button.color.replace('500', '600')} transition duration-200`}
+                        >
+                          {button.message}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
       </div>
+
+      
     </div>
   );
 }
