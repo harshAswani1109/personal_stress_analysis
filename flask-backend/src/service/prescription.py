@@ -183,6 +183,29 @@ class MentalHealthAnalyzer:
         
         return response
 
+    def beautify_response(self, response: str) -> str:
+        """
+        Beautify the response by removing extra spaces and newlines.
+        
+        Args:
+            response (str): Raw response from the model
+        
+        Returns:
+            str: Beautified response
+        """
+        
+        # Remove asterisks
+        text = text.replace('*', '')
+        
+        # Replace \n with actual newlines, then handle the formatting
+        text = text.replace('\\n', '\n')
+        
+        # Remove extra whitespace
+        lines = [line.strip() for line in text.split('\n') if line.strip()]
+        
+        # Join with single newlines
+        return '\n'.join(lines)
+
     def update_guidelines(self, new_guidelines: List[str]):
         """
         Update the vector database with new clinical guidelines.
