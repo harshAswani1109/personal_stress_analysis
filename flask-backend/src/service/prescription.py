@@ -197,10 +197,10 @@ class MentalHealthAnalyzer:
         """
         
         # Remove asterisks
-        text = text.replace('*', '')
+        text = text.replace('**', '')
         
-        # Replace \n with actual newlines, then handle the formatting
-        text = text.replace('\\n', '\n')
+        # Replace \n\n with actual newlines
+        text = text.replace('\\n\\n', '\n')
         
         # Remove extra whitespace
         lines = [line.strip() for line in text.split('\n') if line.strip()]
