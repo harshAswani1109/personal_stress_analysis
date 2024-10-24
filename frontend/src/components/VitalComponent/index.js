@@ -42,6 +42,7 @@ export default function VitalsForm() {
       const resultData = await response.json();
 
       if (resultData.status === "success") {
+        localStorage.setItem("vitalLimit", resultData.health_status);
         setResult("Prediction: " + resultData.health_status);
         setShowDassButton(true);
         window.location.href = "/dass";

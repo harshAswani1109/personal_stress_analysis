@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { API_URL } from "@/constants";
 import { useRouter } from "next/router";
 import {
   questions,
@@ -9,7 +10,8 @@ import {
 
 export default function DassForm() {
   const [vitalsData, setVitalsData] = useState(null);
-  const [responses, setResponses] = useState(Array(42).fill(""));
+  const [responses, setResponses] = useState(Array(3).fill(""));
+  const [isLoading, setIsLoading] = useState(false); // New state for loading
   const router = useRouter();
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function DassForm() {
     setResponses(newResponses);
   };
 
-  const calculateResults = () => {
+  const calculateResults = async () => {
     let stressScore = 0;
     let anxietyScore = 0;
     let depressionScore = 0;
@@ -44,17 +46,52 @@ export default function DassForm() {
       }
     });
 
-    if (isIncomplete) {
-      alert("Please complete all questions before submitting.");
-    } else {
-      router.push({
-        pathname: "/result",
-        query: {
-          stressScore,
-          anxietyScore,
-          depressionScore,
-        },
-      });
+    if (!isIncomplete) {
+      setIsLoading(true); // Set loading to true when starting the request
+      const payload = {
+        hr: vitalsData.hr.toString(),
+        resp: vitalsData.hr.toString(),
+        temp: vitalsData.temp.toString(),
+        spo2: vitalsData.spo2.toString(),
+        depression: depressionScore.toString(),
+        anxiety: anxietyScore.toString(),
+        stress: stressScore.toString(),
+      };
+
+      // Redirect immediately
+      setTimeout(() => {
+        router.push({
+          pathname: "/result",
+          query: {
+            stressScore,
+            anxietyScore,
+            depressionScore,
+          },
+        });
+      }, 30000);
+
+      try {
+        const response = await fetch(`${API_URL}/prescription`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+          localStorage.setItem("prescription", data.prescription);
+        } else {
+          alert("Error fetching prescription. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+      } finally {
+        setIsLoading(false); // Reset loading state after request completes
+      }
     }
   };
 
@@ -108,9 +145,14 @@ export default function DassForm() {
           <button
             type="button"
             onClick={calculateResults}
-            className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition duration-300"
+            className={`w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading} // Disable button when loading
           >
-            Submit
+            {isLoading ? (
+              <span>Loading...</span> // Show loading text or spinner
+            ) : (
+              'Submit'
+            )}
           </button>
         </form>
       </div>
