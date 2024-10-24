@@ -21,7 +21,7 @@ def chat():
         data = request.json
 
         context = data.get('context')
-        context = "give a general advice like a friend" + context
+        context = "give a general advice like a friend in about 1-3 lines" + context
         if context is None:
             return jsonify({'status': 'error', 'message': 'Missing context input'}), 400
 
