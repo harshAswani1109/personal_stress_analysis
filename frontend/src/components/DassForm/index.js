@@ -58,7 +58,6 @@ export default function DassForm() {
         stress: stressScore.toString(),
       };
 
-      // Redirect immediately
       setTimeout(() => {
         router.push({
           pathname: "/result",
