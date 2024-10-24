@@ -5,12 +5,16 @@ import logging
 import numpy as np
 import joblib
 
+project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.append(project_dir)
+from config import Config
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 predict_bp = Blueprint('predict_route', __name__)
 
-model = joblib.load('voting_classification_model.pkl')
+model = joblib.load(Config.MODEL_PATH)
 
 @predict_bp.route('/predict', methods=['POST'])
 def predict():
