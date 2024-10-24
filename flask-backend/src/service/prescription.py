@@ -180,8 +180,10 @@ class MentalHealthAnalyzer:
             context=context,
             scores=scores_str,
         )
+        print("response", response)
 
         response = self.beautify_response(response)
+        print("response", response)
         
         return response
 
