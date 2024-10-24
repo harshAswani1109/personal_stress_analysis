@@ -19,19 +19,19 @@ const buttonConfigs = [
 export default function ResultTable() {
   const router = useRouter();
   const { stressScore, anxietyScore, depressionScore } = router.query;
-  const [vitalLevel, setVitalLevel] = useState(null);
+  const [vitalLimit, setVitalLimit] = useState(null);
 
   useEffect(() => {
     try {
-      const storedVitalLevel = localStorage.getItem("vitalLevel");
-      if (storedVitalLevel && (storedVitalLevel === "abnormal" || storedVitalLevel === "normal")) {
-        setVitalLevel(storedVitalLevel);
+      const storedVitalLimit = localStorage.getItem("vitalLimit");
+      if (storedVitalLimit && (storedVitalLimit === "Abnormal" || storedVitalLimit === "Normal")) {
+        setVitalLimit(storedVitalLimit);
       } else {
-        setVitalLevel(null);
+        setVitalLimit(null);
       }
     } catch (error) {
-      console.error("Error retrieving vitalLevel from localStorage:", error);
-      setVitalLevel(null);
+      console.error("Error retrieving vitalLimit from localStorage:", error);
+      setVitalLimit(null);
     }
   }, []);
 
@@ -59,13 +59,17 @@ export default function ResultTable() {
     return "Extremely Severe";
   };
 
-  const isAbnormal = (level) => level === "abnormal";
+  const isAbnormal = (limit) => limit === "Abnormal";
 
   const msg1 = "You can reach out for support.";
   const msg2 = `Please consult a professional immediately. Due to ${depressionScore > 13 ? 'Depression' : ''} ${anxietyScore > 14 ? 'Anxiety' : ''} ${stressScore > 25 ? 'Stress' : ''}`.trim();
 
-  const needsConsultation = isAbnormal(vitalLevel) && 
+  const needsConsultation = isAbnormal(vitalLimit) && 
     (depressionScore > 13 || anxietyScore > 14 || stressScore > 25);
+
+  // Update button display logic based on vitalLimit and scores
+  const showChatButton = vitalLimit === "Normal" && !(depressionScore > 13 || anxietyScore > 14 || stressScore > 25);
+  const showExpertButton = isAbnormal(vitalLimit) && (depressionScore > 13 || anxietyScore > 14 || stressScore > 25);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
@@ -106,46 +110,51 @@ export default function ResultTable() {
             </tr>
           </tbody>
         </table>
-        {vitalLevel && (
-        <div className="mt-4 text-center cursor-pointer">
-          <table className="w-full border-collapse">
-            <tbody>
-              <tr>
-                <td className="border px-4 py-2">
-                  <p className={`font-semibold text-lg ${needsConsultation ? 'text-red-600' : 'text-green-600'}`}>
-                    {needsConsultation ? msg2 : msg1}
-                  </p>
-                </td>
-                <td className="border px-4 py-2">
-                  {needsConsultation ? (
-                    <button
-                      onClick={() => router.push(buttonConfigs[1].route)}
-                      className={`${buttonConfigs[1].color} text-white px-6 py-3 rounded-lg shadow-md hover:${buttonConfigs[0].color.replace('500', '600')} transition duration-200`}
-                    >
-                      {buttonConfigs[1].message}
-                    </button>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-4">
-                      {buttonConfigs.map((button, index) => (
-                        <button
-                          key={index}
-                          onClick={() => router.push(button.route)}
-                          className={`${button.color} text-white px-6 py-3 rounded-lg shadow-md hover:${button.color.replace('500', '600')} transition duration-200`}
-                        >
-                          {button.message}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      )}
+        {vitalLimit && (
+          <div className="mt-4 text-center cursor-pointer">
+            <table className="w-full border-collapse">
+              <tbody>
+                <tr>
+                  <td className="border px-4 py-2">
+                    <p className={`font-semibold text-lg ${needsConsultation ? 'text-red-600' : 'text-green-600'}`}>
+                      {needsConsultation ? msg2 : msg1}
+                    </p>
+                  </td>
+                  <td className="border px-4 py-2">
+                    {showExpertButton ? (
+                      <button
+                        onClick={() => router.push(buttonConfigs[1].route)}
+                        className={`${buttonConfigs[1].color} text-white px-6 py-3 rounded-lg shadow-md hover:${buttonConfigs[1].color.replace('500', '600')} transition duration-200`}
+                      >
+                        {buttonConfigs[1].message}
+                      </button>
+                    ) : showChatButton ? (
+                      <button
+                        onClick={() => router.push(buttonConfigs[0].route)}
+                        className={`${buttonConfigs[0].color} text-white px-6 py-3 rounded-lg shadow-md hover:${buttonConfigs[0].color.replace('500', '600')} transition duration-200`}
+                      >
+                        {buttonConfigs[0].message}
+                      </button>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-4">
+                        {buttonConfigs.map((button, index) => (
+                          <button
+                            key={index}
+                            onClick={() => router.push(button.route)}
+                            className={`${button.color} text-white px-6 py-3 rounded-lg shadow-md hover:${button.color.replace('500', '600')} transition duration-200`}
+                          >
+                            {button.message}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
-
-      
     </div>
   );
 }

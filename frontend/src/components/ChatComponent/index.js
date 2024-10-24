@@ -1,7 +1,8 @@
+import { API_URL } from "@/constants";
 import React, { useEffect, useState, useRef } from "react";
 
 export default function ChatM() {
-  const [prescription, setPrescription] = useState("hello");
+  const [prescription, setPrescription] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [response, setResponse] = useState("");
   const [messages, setMessages] = useState([]);
@@ -9,7 +10,8 @@ export default function ChatM() {
   useEffect(() => {
     const storedPrescription = localStorage.getItem("prescription");
     if (storedPrescription) {
-      setPrescription(JSON.parse(storedPrescription));
+      // Update to set the prescription with the detailed analysis
+      setPrescription(storedPrescription); // Assuming the detailed analysis is stored as a string
     }
   }, []);
 
@@ -22,12 +24,12 @@ export default function ChatM() {
     setIsLoading(true);
     const timestamp = new Date().toLocaleTimeString();
     try {
-      const res = await fetch("/api/msg", {
+      const res = await fetch(`${API_URL}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: inputValue }),
+        body: JSON.stringify({ context: inputValue }),
       });
 
       if (!res.ok) {
@@ -35,17 +37,19 @@ export default function ChatM() {
       }
 
       const data = await res.json();
-      setResponse(data.reply);
+      const apiResponse = JSON.parse(data.response);
+      const apiMessage = apiResponse.candidates[0].content.parts[0].text; // Store the API response in a variable
+      setResponse(apiMessage); // Update the response state
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: inputValue, sender: "You", time: timestamp },
+        { text: apiMessage, sender: "PSA", time: timestamp }, // Use the variable here
+      ]);
     } catch (error) {
       setResponse("Try again, unable to understand the query.");
     } finally {
       setIsLoading(false); 
       setInputValue("");
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: inputValue, sender: "You", time: timestamp },
-        { text: response, sender: "PSA", time: timestamp },
-      ]);
     }
   };
 
@@ -65,11 +69,12 @@ export default function ChatM() {
         id="messages"
         className="flex flex-col space-y-4 p-3 w-full pt-20 pb-24"
       >
-        {/* {prescription && (
-          <div className="cursor-pointer bg-gray-300 text-gray-600 px-4 py-2 rounded-lg w-1/2 inline-block">
-            {prescription}
+         {prescription && (
+          <div className="cursor-pointer bg-gray-300 text-gray-600 px-4 py-2 rounded-lg w-2/3 inline-block shadow-md">
+            <h3 className="font-bold text-xl">Prescription Details:</h3>
+            <p className="">{prescription}</p>
           </div>
-        )} */}
+        )}
         {messages.map((msg, index) => {
           const isUser = msg.sender === "You";
           const messageClass = isUser ? "justify-end" : "";
