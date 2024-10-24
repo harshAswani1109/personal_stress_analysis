@@ -1,4 +1,4 @@
-export const API_URL = "https://api.example.com";
+export const API_URL = "https://personal-stress-analysis-1.onrender.com";
 
 export const questions = [
   "I found myself getting upset by quite trivial things", // 1 (Stress)
