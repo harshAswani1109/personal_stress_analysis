@@ -9,6 +9,7 @@ class Config:
     llm_model = os.getenv("LLM_MODEL")
     FLASK_HOST = os.getenv("FLASK_HOST")
     chatbot_url = os.getenv("CHATBOT_URL", "") + google_api_key
+    MODEL_PATH = os.getenv("MODEL_PATH")
     # huggingface_model = os.getenv("HUGGINGFACE_MODEL")
     # vectordb_path = os.getenv("VECTORDB_PATH")
     # model_path = os.getenv("MODEL_PATH")

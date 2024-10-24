@@ -2,8 +2,6 @@ from flask import Blueprint, request, jsonify
 import os
 import sys
 import logging
-import numpy as np
-import joblib
 
 project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(project_dir)
