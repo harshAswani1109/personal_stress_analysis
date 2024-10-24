@@ -55,7 +55,7 @@ class MentalHealthAnalyzer:
             3. Any potential warning signs or areas requiring immediate attention
             4. Suggested lifestyle modifications and coping strategies
             
-            Format your response in a clear, professional manner.
+            Format your response in a clear, professional manner in about 100 words.
             """
         )
         
