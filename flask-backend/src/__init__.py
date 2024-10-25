@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS 
-from heartbeat_service import HeartbeatService
+from src.service.heartbeat import HeartbeatService
 
 
 def create_app():
