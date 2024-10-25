@@ -15,8 +15,7 @@ def create_app():
     app.register_blueprint(prescription_bp)
     app.register_blueprint(chat_bp)
 
-    @app.before_first_request
-    def start_heartbeat():
+    with app.app_context():
         heartbeat.start()
-        
+
     return app
