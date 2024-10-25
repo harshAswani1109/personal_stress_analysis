@@ -187,7 +187,7 @@ class MentalHealthAnalyzer:
         
         return response
 
-    def beautify_response(self, response: str) -> str:
+    def beautify_response(self, text: str) -> str:
         """
         Beautify the response by removing extra spaces and newlines.
         

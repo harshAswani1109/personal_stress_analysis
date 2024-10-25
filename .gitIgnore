@@ -82,3 +82,4 @@ yarn-error.log*
 *.sln
 
 mental_health/
+mental_health_db
