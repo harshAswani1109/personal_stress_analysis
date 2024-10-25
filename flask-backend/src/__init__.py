@@ -15,6 +15,7 @@ def create_app():
     app.register_blueprint(prescription_bp)
     app.register_blueprint(chat_bp)
 
+    heartbeat = HeartbeatService(app)
     with app.app_context():
         heartbeat.start()
 
